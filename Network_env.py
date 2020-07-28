@@ -25,8 +25,9 @@ class Network_Env(object):
         for i in range(n_packets):
             source = np.random.random_integers(0,self.network.nnodes-1)
             dest = np.random.random_integers(0,self.network.nnodes-1)
-            while source == dest:
+            while source == dest or nx.has_path(self.network.graph, source,dest) == False:
                 dest = np.random.random_integers(0,self.network.nnodes-1)
+                source = np.random.random_integers(0,self.network.nnodes-1)
             ttl = 4
             self.packet_list.append(Packet(source,dest,ttl,0,self.network.nnodes))  
 
@@ -38,7 +39,7 @@ class Network_Env(object):
         while self.currtime <= self.runtime :
             for i,packet in enumerate(self.packet_list):
                 if self.currtime == packet.processAtTime and packet.drop_packet == False and packet.packet_delivery_status == False:
-                    self.router.packet_process(packet,self.network)
+                    self.router.packet_process(packet)
             self.currtime += 1
 
         

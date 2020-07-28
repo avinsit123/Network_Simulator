@@ -13,7 +13,7 @@ from queue import Queue
 import networkx as nx
 from network_components import Packet, Network_Builder
 from Network_env import Network_Env, NetworkSnapshot
-from routing_algorithms import Random_Routing
+from routing_algorithms import Random_Routing, QRoutingAlgo
 import random 
 
 if __name__ == "__main__":
@@ -21,7 +21,8 @@ if __name__ == "__main__":
     n_nodes = 6
     max_q_size = 10
     nx_graph = Network_Builder(n_nodes,max_q_size,edge_list)
-    router = Random_Routing()
+    router = QRoutingAlgo(nx_graph,n_nodes)
+   # router = Random_Routing()
     # edge_list = [
     #     (0, 1, 4),
     #     (0, 7, 8),
@@ -42,13 +43,14 @@ if __name__ == "__main__":
 
     env = Network_Env(nx_graph,router)
     snapshot = NetworkSnapshot(env)
-    n_packets = 10
+    n_packets = 20
     total_runtime = 300
     env.Initialize_Simulation(total_runtime,n_packets)
     env.run_simulation()
-    #snapshot.display_all_packet_status()
+    snapshot.display_all_packet_status()
     snapshot.log_queue_list()
     snapshot.packet_status()
+    print(router.Qtable[0][:][1])
     # ql = QLearning()
     # env.transfer_data(ql)
     # ql.Display()
